@@ -1,19 +1,43 @@
-    function calculateTotal() {
-  var prices = document.querySelectorAll('[data-ns-test="price"]');
-  var total = 0;
+// Get the table element
+const table = document.querySelector('table');
 
-  for (var i = 0; i < prices.length; i++) {
-    total += parseFloat(prices[i].textContent);
-  }
+// Function to calculate and display the total price
+function calculateTotalPrice() {
+  // Get all the elements that store the prices
+  const priceElements = table.querySelectorAll('[data-ns-test="price"]');
 
-  var table = document.querySelector('[data-ns-test="grandTotal"]');
-  var newRow = document.createElement('tr');
-  var newCell = document.createElement('td');
+  let totalPrice = 0;
 
-  newCell.colSpan = 2;
-  newCell.textContent = 'Total Price: ' + total.toFixed(2);
-  newRow.appendChild(newCell);
-  table.appendChild(newRow);
+  // Calculate the sum of prices
+  priceElements.forEach((element) => {
+    const price = parseFloat(element.textContent);
+    if (!isNaN(price)) {
+      totalPrice += price;
+    }
+  });
+
+  // Get the table footer row for displaying the total price
+  const footerRow = table.querySelector('tfoot tr[data-ns-test="grandTotal"]');
+
+  // Create a new cell for displaying the total price
+  const totalCell = document.createElement('td');
+  totalCell.setAttribute('colspan', '2');
+  totalCell.textContent = 'Total Price: $' + totalPrice.toFixed(2);
+
+  // Clear any existing content in the footer row
+  footerRow.innerHTML = '';
+
+  // Append the total price cell to the footer row
+  footerRow.appendChild(totalCell);
 }
 
-calculateTotal();
+// Call the calculateTotalPrice function initially
+calculateTotalPrice();
+
+// Example: Modify the price of an item dynamically
+const milkPriceElement = document.querySelector('td[data-ns-test="price"]:nth-child(2)');
+milkPriceElement.textContent = '4.5';
+
+// Recalculate the total price after modifying the price
+calculateTotalPrice();
+
